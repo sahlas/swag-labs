@@ -33,13 +33,6 @@ public class ShoppingCartPage {
         page.navigate(SHOPPING_CART_PAGE_URL);
     }
 
-    @Step("Get URL of the shopping cart page")
-    public String getUrl() {
-        // Return the URL of the shopping cart page
-        ScreenshotManager.takeScreenshot(page, "shopping-cart-page-url");
-        return page.url();
-    }
-
     @Step("Get the title of the shopping cart page")
     public String getTitle() {
         // Get the title text from the page element
@@ -189,39 +182,7 @@ public class ShoppingCartPage {
         });
     }
 
-    /**
-     * Retrieves all checkout line items from the shopping cart.
-     * This method extracts product information from the cart UI elements and converts
-     * them into CheckoutLineItem objects for further processing.
-     *
-     * @return List of CheckoutLineItem objects containing product name, quantity, and price.
-     * Returns an empty list if no items are found in the cart.
-     */
-    public List<CheckoutLineItem> getCheckoutItems() {
-        // Locate the cart list container element
-        Locator cartList = page.getByTestId("cart-list");
 
-        // Check if cart is empty and return empty list if no items found
-        if (cartList.all().isEmpty()) {
-            System.out.println("No items found in the cart.");
-            return List.of();
-        }
-
-        // Get all inventory items from the first cart list element
-        List<Locator> subItems = cartList.all().get(0).getByTestId("inventory-item").all();
-        System.out.println("There were: " + subItems.size() + " items found.");
-
-        // Transform each cart item locator into a CheckoutLineItem object
-        return subItems.stream()
-                .map(subItem -> new CheckoutLineItem(
-                        // Extract and clean product name
-                        trimmedProductTitle(subItem.getByTestId("inventory-item-name").textContent()),
-                        // Parse quantity as integer
-                        Integer.parseInt(subItem.getByTestId("item-quantity").textContent()),
-                        // Extract and clean price (note: should use removeDollarSignFromPrice for proper price handling)
-                        subItem.getByTestId("inventory-item-price").textContent()
-                )).toList();
-    }
 
     private String trimmedProductTitle(String value) {
         return value.strip().replaceAll("\u00A0", "");
@@ -241,12 +202,18 @@ public class ShoppingCartPage {
      */
     @Step("Sally removes the product from her cart by product name")
     public void removeProductFromCart(String productName) {
-        // Locate the product in the cart by its name
-        Locator product = page.getByTestId("inventory-item").getByText(productName);
         // Click the remove button for the specified product
         Locator removeFromCartButton = page.getByTestId("remove-" + productName.toLowerCase().replace(" ", "-"));
         removeFromCartButton.click();
         // Take a screenshot after removing the product
         ScreenshotManager.takeScreenshot(page, "product-removed-from-cart-" + productName);
+    }
+
+    public void continueShopping() {
+        // Click the continue shopping button to navigate back to the product list page
+        Locator continueShoppingButton = page.getByTestId("continue-shopping");
+        continueShoppingButton.click();
+        // Take a screenshot after clicking the continue shopping button
+        ScreenshotManager.takeScreenshot(page, "continue-shopping-button-clicked");
     }
 }

@@ -18,10 +18,9 @@ public class CheckoutCompletePage {
         this.page = page;
     }
 
-    public String getUrl() {
-        return CHECKOUT_COMPLETE_PAGE_URL;
-    }
-
+    /**
+     * Get order confirmation message from the checkout complete page.
+     */
     @Step("Get Order Confirmation Message")
     public boolean getOrderConfirmationMessage() {
         // Get the order confirmation message from the checkout complete page
@@ -40,6 +39,11 @@ public class CheckoutCompletePage {
         return isMessageCorrect;
     }
 
+    /**
+     * Check the title of the checkout complete page.
+     *
+     * @return true if it matches the expected title, false otherwise.
+     */
     @Step("Check the title of the checkout complete page")
     public boolean checkPageTitle() {
         // Extract the title text from the page element
@@ -54,5 +58,20 @@ public class CheckoutCompletePage {
         }
         System.out.println("Checkout complete page title: expected - " + CHECKOUT_COMPLETE_PAGE_TITLE + "\n actual - " + title);
         return isTitleCorrect;
+    }
+
+    public boolean checkPageUrl() {
+        // Get the current URL of the page
+        String currentUrl = page.url();
+        boolean isUrlCorrect = currentUrl.equals(CHECKOUT_COMPLETE_PAGE_URL);
+        if (isUrlCorrect) {
+            System.out.println("Checkout complete page URL is correct: " + currentUrl);
+            ScreenshotManager.takeScreenshot(page, "checkout-complete-url-" + currentUrl);
+        } else {
+            System.out.println("Checkout complete page URL is incorrect: " + currentUrl);
+            ScreenshotManager.takeScreenshot(page, "checkout-complete-url-" + currentUrl);
+        }
+        System.out.println("Checkout complete page URL: expected - " + CHECKOUT_COMPLETE_PAGE_URL + "\n actual - " + currentUrl);
+        return isUrlCorrect;
     }
 }

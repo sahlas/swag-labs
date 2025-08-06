@@ -7,14 +7,14 @@ import com.sahlas.fixtures.TakesFinalScreenshot;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
 
-public class ProductList implements TakesFinalScreenshot {
+public class ProductListPage implements TakesFinalScreenshot {
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
             .load();
     private static final String PRODUCT_LIST_PAGE_URL = dotenv.get("PRODUCT_LIST_PAGE_URL", "https://www.saucedemo.com/inventory.html");
     private final Page page;
 
-    public ProductList(Page page) {
+    public ProductListPage(Page page) {
         this.page = page;
     }
 
@@ -159,6 +159,13 @@ public class ProductList implements TakesFinalScreenshot {
         ScreenshotManager.takeScreenshot(page, "checkout-button-clicked");
     }
 
+
+    /**
+     * Checks if the current page URL matches the expected product list page URL.
+     * This method captures a screenshot if the URL is not correct.
+     * @return boolean true if the current URL matches the expected URL, false otherwise.
+     */
+    @Step("Check if the current page URL is correct")
     public boolean checkPageUrl() {
         String currentUrl = page.url();
         boolean isCorrectUrl = currentUrl.equals(PRODUCT_LIST_PAGE_URL);
@@ -171,6 +178,12 @@ public class ProductList implements TakesFinalScreenshot {
         return isCorrectUrl;
     }
 
+    /**
+     * Checks if the current page title matches the expected product list page title.
+     * This method captures a screenshot if the title is not correct.
+     * @return boolean true if the current title matches the expected title, false otherwise.
+     */
+    @Step("Chck if product button is enabled or marked for removal")
     public boolean getProductButtonState(String productName) {
 
         Locator productButton = page.getByTestId("remove-" + productName.toLowerCase().replace(" ", "-"));
@@ -183,5 +196,42 @@ public class ProductList implements TakesFinalScreenshot {
             ScreenshotManager.takeScreenshot(page, "product-button-disabled");
         }
         return isEnabled;
+    }
+
+    /**
+     * Clicks on the product name to navigate to the product details page.
+     * This method captures a screenshot after clicking on the product name.
+     * @param productName The name of the product to click on.
+     */
+    @Step("Navigate to product details page by clicking on product name")
+    public void clickOnProductName(String productName) {
+        // Click on the product name to navigate to the product details page
+        Locator product = page.getByTestId("inventory-item");
+        Locator productNameLocator = product.getByTestId("inventory-item-name").filter(new Locator.FilterOptions()
+                .setHasText(productName));
+        ScreenshotManager.takeScreenshot(page, "product-name-clicked-" + productName);
+        productNameLocator.click();
+    }
+
+    /**
+     * Checks if the page title is correct.
+     * This method captures a screenshot if the title is not correct.
+     * @return boolean true if the page title matches the expected product list page title, false otherwise.
+     */
+    @Step("Check if the page title is correct")
+    public boolean checkTitle() {
+        // Get the title of the page
+        String title = getTitle();
+
+        // Check if the title matches the expected product list page title
+        boolean isTitleCorrect = title.equals("Swag Labs");
+        if (isTitleCorrect) {
+            System.out.println("Page title is correct: " + title);
+            ScreenshotManager.takeScreenshot(page, "page-title-correct");
+        } else {
+            System.out.println("Page title is not correct: " + title);
+            ScreenshotManager.takeScreenshot(page, "page-title-not-correct");
+        }
+        return isTitleCorrect;
     }
 }

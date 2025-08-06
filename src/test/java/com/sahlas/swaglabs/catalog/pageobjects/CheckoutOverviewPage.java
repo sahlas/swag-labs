@@ -7,20 +7,29 @@ import io.cucumber.datatable.DataTable;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CheckoutOverviewPage {
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
             .load();
     private static final String CHECKOUT_OVERVIEW_PAGE_TITLE = dotenv.get("CHECKOUT_OVERVIEW_PAGE_TITLE", "Checkout: Overview");
-    private static final String URL = dotenv.get("URL", "https://www.saucedemo.com/checkout-step-two.html");
+    private static final String CHECKOUT_OVERVIEW_PAGE_URL = dotenv.get("CHECKOUT_OVERVIEW_PAGE_URL", "https://www.saucedemo.com/checkout-step-two.html");
     private final Page page;
 
     public CheckoutOverviewPage(Page page) {
         this.page = page;
     }
 
+    /**
+     * Check the title of the checkout overview page.
+     *
+     * @return  boolean true if the title matches "Checkout: Overview", false otherwise.
+     * This method captures a screenshot of the title for verification purposes.
+     */
     @Step("Check the title of the checkout overview page")
     public boolean checkTitle() {
         // Get the title text from the page element
@@ -36,18 +45,23 @@ public class CheckoutOverviewPage {
         return isTitleCorrect;
     }
 
-    @Step("value = 'Get the title of the checkout overview page'")
+    /**
+     * Get the title of the checkout overview page.
+     *
+     * @return The title text of the page.
+     */
+    @Step("Get the title of the checkout overview page")
     public String getTitle() {
         return page.getByTestId("title").textContent();
     }
 
-    @Step("value = 'Get shipping information'")
-    public String getShippingInformation() {
-        // Get the shipping information value from the overview page
-        return page.getByTestId("shipping-info-value").textContent();
-    }
 
-    @Step("value = 'Get the total price'")
+    /** get the total price of the items in the cart.
+     * This method captures a screenshot of the total price for verification purposes.
+     *
+     * @return The total price as a String.
+     */
+    @Step("Get the total price of the items in the cart")
     public String getTotalPrice() {
         // Get the total price from the overview page
         ScreenshotManager.takeScreenshot(page, "total-label");
@@ -55,31 +69,30 @@ public class CheckoutOverviewPage {
         return page.getByTestId("total-label").textContent();
     }
 
-    // Check that the product names in the cart
+    /**
+     * Check if the product names in the cart match the expected product names.
+     *
+     * @param expectedProductNames An array of expected product names.
+     * @return true if all expected product names are present, false otherwise.
+     */
     @Step("value = 'Check product names'")
     public boolean checkProductNames(String[] expectedProductNames) {
         List<Locator> productNames = page.getByTestId("inventory-item-name").all();
         boolean allNamesPresent = true;
 
-        // loop through the expected product names
-        // in the inner loop check if the product name is present in the actual product names
-        for (Locator productNameLocator : productNames) {
-            String productName = productNameLocator.textContent();
-            allNamesPresent = false;
-
-            for (String expectedName : expectedProductNames) {
-                if (productName.contains(expectedName)) {
-                    System.out.println("Product name found in description: " + expectedName);
-                    allNamesPresent = true;
-                    break;
-                }
-            }
-        }
+        Set<String> actualNamesSet = productNames.stream()
+                .map(Locator::textContent)
+                .collect(Collectors.toSet());
+        allNamesPresent = actualNamesSet.containsAll(Arrays.asList(expectedProductNames));
 
         return allNamesPresent;
     }
 
-    @Step("value = 'Click the Finish button'")
+    /**
+     * Click the Finish button to complete the checkout process.
+     * This method captures a screenshot before and after clicking the button for verification purposes.
+     */
+    @Step("Click the Finish button")
     public void finishButtonClick() {
         ScreenshotManager.takeScreenshot(page, "finish-button-click");
         // Click the finish button
@@ -87,6 +100,13 @@ public class CheckoutOverviewPage {
         System.out.println("Clicked on the Finish button");
     }
 
+    /**
+     * Verify if the product names in the cart match the expected product names.
+     *
+     * @param productsInCart A DataTable containing the expected product names.
+     * @return true if all expected product names are present, false otherwise.
+     */
+    @Step("Verify cart contents")
     public boolean verifyCartContents(DataTable productsInCart) {
         String[] productNames = productsInCart.asMaps(String.class, String.class).stream()
                 .map(product -> product.get("product"))
@@ -99,18 +119,13 @@ public class CheckoutOverviewPage {
         return allNamesPresent;
     }
 
-    public boolean getUrl() {
-        String currentUrl = page.url();
-        boolean isUrlCorrect = currentUrl.equals(URL);
-        if (isUrlCorrect) {
-            System.out.println("Current URL is correct: " + currentUrl);
-        } else {
-            System.out.println("Current URL is incorrect: " + currentUrl);
-        }
-        return isUrlCorrect;
-    }
-
-
+    /**
+     * Get the subtotal price of the items in the cart.
+     * This method captures a screenshot of the subtotal price for verification purposes.
+     *
+     * @return The subtotal price as a double.
+     */
+    @Step("Get the subtotal price of the items in the cart")
     public double getSubTotalPrice() {
         // Get the subtotal price from the overview page
         ScreenshotManager.takeScreenshot(page, "subtotal-label");
@@ -124,11 +139,31 @@ public class CheckoutOverviewPage {
     }
 
 
+    /**
+     * Click the Cancel button to return to the previous page.
+     * This method captures a screenshot before and after clicking the button for verification purposes.
+     */
+    @Step("Click the Cancel button")
     public void cancelButtonClick() {
         // Click the cancel button
         System.out.println("Clicked on the Cancel button from: " + this.getTitle());
         ScreenshotManager.takeScreenshot(page, "cancel-button-before-click");
         page.getByTestId("cancel").click();
         ScreenshotManager.takeScreenshot(page, "cancel-button-clicked");
+    }
+
+    public boolean checkPageUrl() {
+        // Get the current URL of the page
+        String url = page.url();
+        // Check if the URL matches the expected checkout overview page URL
+        boolean isUrlCorrect = url.equals(CHECKOUT_OVERVIEW_PAGE_URL);
+        if (isUrlCorrect) {
+            System.out.println("Checkout overview page URL is correct: " + url);
+            ScreenshotManager.takeScreenshot(page, "checkout-overview-url-" + url);
+        } else {
+            System.out.println("Checkout overview page URL is incorrect: " + url);
+            ScreenshotManager.takeScreenshot(page, "checkout-overview-url-" + url);
+        }
+        return isUrlCorrect;
     }
 }

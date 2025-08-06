@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -148,30 +148,6 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-
-            <!-- Exec Maven Plugin for installing Playwright browsers -->
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>exec-maven-plugin</artifactId>-->
-<!--                <version>3.1.1</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>install-playwright-browsers</id>-->
-<!--                        <phase>pre-integration-test</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>java</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <mainClass>com.microsoft.playwright.CLI</mainClass>-->
-<!--                            <arguments>-->
-<!--                                <argument>install</argument>-->
-<!--                                <argument>&#45;&#45;with-deps</argument>-->
-<!--                            </arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-
             <!-- Maven Surefire Plugin for running unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

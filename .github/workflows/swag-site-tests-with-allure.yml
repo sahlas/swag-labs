@@ -2,7 +2,7 @@ name: Run Tests and Generate Allure Report
 
 on:
   workflow_dispatch:
-    # Allows manual triggering of the workflow
+  # Allows manual triggering of the workflow
   push:
     branches: [ main ]
   pull_request:

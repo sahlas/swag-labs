@@ -4,6 +4,7 @@ import com.microsoft.playwright.Page;
 import com.sahlas.fixtures.ScreenshotManager;
 import io.cucumber.datatable.DataTable;
 import io.github.cdimascio.dotenv.Dotenv;
+import io.qameta.allure.Step;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class CheckoutInformationPage {
      * @return boolean true if the title matches "Checkout: Your Information", false otherwise.
      */
 
+    @Step("Check the title of the checkout information page")
     public boolean checkTitle() {
         // Get the title text from the page element
         String title = page.getByTestId("title").textContent();
@@ -50,6 +52,12 @@ public class CheckoutInformationPage {
         return isTitleCorrect;
     }
 
+    /**
+     * Gets the title of the checkout information page.
+     *
+     * @return The title text of the page.
+     */
+    @Step("Get the title of the checkout information page")
     public String getTitle() {
         ScreenshotManager.takeScreenshot(page, "title is equal to Checkout: Your Information");
         return page.getByTestId("title").textContent();
@@ -60,6 +68,7 @@ public class CheckoutInformationPage {
      *
      * @param buttonName The test ID of the button to click.
      */
+    @Step("Click the checkout button")
     public void buttonClick(String buttonName) {
         // Click the checkout button with the specified name
         System.out.println("Clicked on the " + buttonName + " button");
@@ -73,6 +82,7 @@ public class CheckoutInformationPage {
      *                          "first_name", "last_name", and "postal_code".
      * @throws IllegalArgumentException if the DataTable is empty.
      */
+    @Step("Fill in personal information")
     public void fillInPersonalInformation(DataTable personalInfoTable) {
         // Get the personal information from the DataTable
         List<Map<String, String>> personalInfo = personalInfoTable.asMaps(String.class, String.class);
@@ -87,6 +97,12 @@ public class CheckoutInformationPage {
         page.getByPlaceholder("Zip/Postal Code").fill(info.get("postal_code"));
     }
 
+    /**
+     * Checks if the current URL of the page matches the expected checkout step one URL.
+     *
+     * @return boolean true if the current URL is "checkout-step-one.html", false otherwise.
+     */
+    @Step("Check the current URL of the checkout information page")
     public boolean checkPageUrl() {
         String currentUrl = page.url();
         boolean isUrlCorrect = currentUrl.equals(URL + "checkout-step-one.html");
@@ -98,6 +114,11 @@ public class CheckoutInformationPage {
         return isUrlCorrect;
     }
 
+    /**
+     * Clicks the cancel button on the checkout information page.
+     * This action navigates back to the inventory page.
+     */
+    @Step("Click the cancel button on the checkout information page")
     public void cancelButtonClick() {
         // Find and click the cancel button
         System.out.println("Clicked on the Cancel button from: " + this.getTitle());

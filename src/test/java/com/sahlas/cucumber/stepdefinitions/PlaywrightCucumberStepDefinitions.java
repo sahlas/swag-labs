@@ -1,11 +1,9 @@
 package com.sahlas.cucumber.stepdefinitions;
 
 import com.sahlas.domain.User;
-import com.sahlas.swaglabs.catalog.ProductSummary;
 import com.sahlas.swaglabs.catalog.pageobjects.*;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
-import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -17,58 +15,66 @@ import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+/**
+ * Step definitions for Cucumber tests using Playwright.
+ * This class contains the implementation of Gherkin steps for testing the Swag Labs application.
+ */
 public class PlaywrightCucumberStepDefinitions {
+    // Load environment variables using dotenv
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
             .load();
-    static final String SHOPPING_CART_PAGE_TITLE = dotenv.get("SHOPPING_CART_PAGE_TITLE", "Your Cart");
-    static final String PRODUCT_LIST_PAGE_TITLE = dotenv.get("PRODUCT_LIST_PAGE_TITLE", "Products");
+
+    // Page object instances for different pages in the application
     LoginPage loginPage;
-    ProductList productList;
+    ProductListPage productListPage;
+    ProductDetailsPage productDetailsPage;
     ShoppingCartPage shoppingCartPage;
     CheckoutInformationPage checkoutInformationPage;
     CheckoutOverviewPage checkoutOverviewPage;
     CheckoutCompletePage checkoutCompletePage;
 
-
-    @DataTableType
-    public static ProductSummary transform(Map<String, String> entry) {
-        return new ProductSummary(
-                entry.get("Product Name"),
-                entry.get("Price")
-        );
-    }
-
-
+    /**
+     * Initializes page objects before each test.
+     * This method is executed before every scenario to set up the required page objects.
+     */
     @Before
     public void setUp() {
-        // Initialize the page objects
         loginPage = new LoginPage(PlaywrightCucumberFixtures.getPage());
-        productList = new ProductList(PlaywrightCucumberFixtures.getPage());
+        productListPage = new ProductListPage(PlaywrightCucumberFixtures.getPage());
+        productDetailsPage = new ProductDetailsPage(PlaywrightCucumberFixtures.getPage());
         checkoutInformationPage = new CheckoutInformationPage(PlaywrightCucumberFixtures.getPage());
         checkoutOverviewPage = new CheckoutOverviewPage(PlaywrightCucumberFixtures.getPage());
         shoppingCartPage = new ShoppingCartPage(PlaywrightCucumberFixtures.getPage());
         checkoutCompletePage = new CheckoutCompletePage(PlaywrightCucumberFixtures.getPage());
-
     }
 
+    /**
+     * Navigates to the login page and verifies the URL.
+     */
     @Given("Sally is on the login page")
     public void sallyIsOnTheLoginPage() {
-        // Navigate to the login page
         loginPage.openHomePage();
         assertThat(loginPage.gtetUrl())
                 .as("Login page URL should be correct")
                 .isTrue();
     }
 
+    /**
+     * Logs in using the provided username and password.
+     *
+     * @param username The username to log in with.
+     * @param password The password to log in with.
+     */
     @When("Sally enters her {string} and {string}")
     public void she_enters_her_name_and_password(String username, String password) {
-        // Write code here that turns the phrase above into concrete actions
         User user = new User(username, password);
         loginPage.loginUser(user);
-
     }
 
+    /**
+     * Verifies that Sally is logged in successfully by checking the page title.
+     */
     @Then("Sally should be logged in successfully")
     public void she_should_be_logged_in_successfully() {
         assertThat(loginPage.title())
@@ -76,7 +82,11 @@ public class PlaywrightCucumberStepDefinitions {
                 .isEqualTo("Products");
     }
 
-
+    /**
+     * Verifies that the error message displayed matches the expected value.
+     *
+     * @param errorMessage The expected error message.
+     */
     @Then("the error message should be {string}")
     public void theErrorMessageShouldBe(String errorMessage) {
         assertThat(loginPage.errorMessage())
@@ -84,92 +94,122 @@ public class PlaywrightCucumberStepDefinitions {
                 .containsIgnoringCase(errorMessage);
     }
 
-    // When she sorts by "Price (low to high)" for example
+    /**
+     * Sorts the product list by the specified criteria and verifies the sort option.
+     *
+     * @param sortCriteria The criteria to sort by (e.g., "Price (low to high)").
+     */
     @When("Sally sorts by {string}")
     public void she_sorts_by(String sortCriteria) {
-        // Write code here that turns the phrase above into concrete actions
-        productList.sortBy(sortCriteria);
-        assertThat(productList.getSortOption(sortCriteria))
+        productListPage.sortBy(sortCriteria);
+        assertThat(productListPage.getSortOption(sortCriteria))
                 .as("Sort option should match expected value")
                 .isTrue();
     }
 
-    // Then the first product displayed should be "Sauce Labs Backpack"
+    /**
+     * Verifies that the first product displayed matches the expected product name.
+     *
+     * @param productName The expected name of the first product.
+     */
     @Then("the first product displayed should be {string}")
     public void theFirstProductDisplayedShouldBe(String productName) {
-        // Write code here that turns the phrase above into concrete actions
-        assertThat(productList.getFirstProductName(productName))
+        assertThat(productListPage.getFirstProductName(productName))
                 .as("First product name should match expected value")
                 .isTrue();
     }
 
+    /**
+     * Navigate directly to the inventory page.
+     */
     @Given("Sally opens a browser link to the inventory page")
     public void sallyOpensABrowserLinkToTheInventoryPage() {
-        // Navigate to the products page directly
-        productList.openProductListPage();
+        productListPage.openProductListPage();
     }
 
+    /**
+     * Verifies that Sally is redirected to the login page.
+     */
     @When("Sally is redirected to the login page")
     public void redirectToTheLoginPage() {
-        // Wait for the page to load
         PlaywrightCucumberFixtures.getPage().waitForLoadState();
         assertThat(PlaywrightCucumberFixtures.getPage().url())
-                .as("Login page is loaded with a an error message")
+                .as("Login page is loaded with an error message")
                 .isEqualTo("https://www.saucedemo.com/");
     }
 
+    /**
+     * Verifies that Sally is notified of a login error with the specified message.
+     *
+     * @param errorMessage The expected error message.
+     */
     @Then("Sally should be notified of login error {string}")
-    public void sheShouldBeNotifiedOfLoginError(String arg0) {
-        // Verify that the error message is displayed
+    public void sheShouldBeNotifiedOfLoginError(String errorMessage) {
         assertThat(loginPage.errorMessage())
                 .as("Error message should match expected value")
-                .isEqualTo(arg0);
+                .isEqualTo(errorMessage);
     }
 
+    /**
+     * Verifies that the product's status indicates it has been added to the cart.
+     *
+     * @param productName The name of the product to verify.
+     */
     @Then("the {string} status indicates it has been added to the cart")
     public void theProductShouldBeAddedToHerCart(String productName) {
-        // Verify that the state of the product button has changed to "Remove"
-        assertThat(productList.getProductButtonState(productName))
+        assertThat(productListPage.getProductButtonState(productName))
                 .as("Product button state should be 'Remove' after adding to cart")
                 .isTrue();
-        // Verify that the product is added to the cart
-        int cartCount = productList.getCartCount();
+        int cartCount = productListPage.getCartCount();
         assertThat(cartCount)
                 .as("Cart count should be greater than 0")
                 .isGreaterThan(0);
         System.out.println("Cart count: " + cartCount);
     }
 
-
+    /**
+     * Adds a product to Sally's cart and verifies the cart count.
+     *
+     * @param productName The name of the product to add.
+     */
     @When("Sally adds a {string} to her cart")
     public void sheAddsAToHerCart(String productName) {
-        // Write code here that turns the phrase above into concrete actions
-        productList.addProductToCart(productName);
-        assertThat(productList.checkPageUrl())
+        productListPage.addProductToCart(productName);
+        assertThat(productListPage.checkPageUrl())
                 .as("Should be on the inventory page")
                 .isTrue();
-        assertThat(productList.getCartCount())
+        assertThat(productListPage.getCartCount())
                 .as("Cart count should be greater than 0 after adding a product")
                 .isGreaterThan(0);
     }
 
+
+    /**
+     * Adds multiple products to Sally's cart based on the provided DataTable.
+     *
+     * @param productTable A DataTable containing product names to add.
+     */
     @When("Sally adds the following products to the cart")
     public void theUserAddsTheFollowingProductsToTheCart(DataTable productTable) {
-        assertThat(productList.checkPageUrl())
+        assertThat(productListPage.checkPageUrl())
                 .as("Should be on the inventory page")
                 .isTrue();
-        assertThat(productList.getTitle())
-                .as("Product list title equal contain 'Products'")
-                .isEqualTo("Products");
+        assertThat(productListPage.checkTitle())
+                .as("Product list title should contain 'Products'")
+                .isTrue();
         List<Map<String, String>> products = productTable.asMaps(String.class, String.class);
 
         for (Map<String, String> product : products) {
             String productName = product.get("product");
-            productList.addProductToCart(productName);
+            productListPage.addProductToCart(productName);
         }
-
     }
 
+    /**
+     * Verifies that the shopping cart contains all products added for checkout.
+     *
+     * @param productTable A DataTable containing expected product details.
+     */
     @Then("the shopping cart page should indicate all products picked for checkout")
     public void theShoppingCartShouldContainAllAddedProducts(DataTable productTable) {
         boolean dataMatch = shoppingCartPage.verifyCartContents(productTable);
@@ -178,35 +218,40 @@ public class PlaywrightCucumberStepDefinitions {
                 .isTrue();
     }
 
+    /**
+     * Removes a specific product from Sally's cart on the inventory page.
+     *
+     * @param productName The name of the product to remove.
+     */
     @And("Sally removes the {string} from her cart on inventory page")
     public void removeItemFromTheInventoryPage(String productName) {
-        // First, get the current cart count
-        int initialCartCount = productList.getCartCount();
+        int initialCartCount = productListPage.getCartCount();
         System.out.println("Initial cart count: " + initialCartCount);
-        // Next, add the product to the cart
-        productList.removeProductFromCart(productName);
-        // Verify that the product is removed from the cart by checking the cart count against the initial count
-        int finalCartCount = productList.getCartCount();
+        productListPage.removeProductFromCart(productName);
+        int finalCartCount = productListPage.getCartCount();
         System.out.println("Final cart count: " + finalCartCount);
         assertThat(finalCartCount)
                 .as("Cart count should be less than initial count after removing a product")
                 .isLessThan(initialCartCount);
     }
 
+    /**
+     * Verifies that only the expected products remain in Sally's cart.
+     */
     @Then("check that only the expected products are in her cart")
     public void checkThatOnlyTheRemainingProductsAreInHerCart() {
-        // Verify that the specified product is in the cart
-        int cartCount = productList.getCartCount();
+        int cartCount = productListPage.getCartCount();
         assertThat(cartCount)
                 .as("Cart count should be 1 less after removing a product")
                 .isEqualTo(1);
         System.out.println("Cart count after removal: " + cartCount);
-
     }
 
+    /**
+     * Navigates to the cart page and verifies the page title and URL.
+     */
     @When("Sally views her cart")
     public void sheViewsHerCart() {
-        // Navigate to the cart page
         shoppingCartPage.openShoppingCartPage();
         assertThat(shoppingCartPage.checkPageUrl())
                 .as("Cart page URL should be correct")
@@ -216,29 +261,47 @@ public class PlaywrightCucumberStepDefinitions {
                 .isTrue();
     }
 
+    /**
+     * Verifies that Sally sees the expected products in her cart.
+     */
     @Then("Sally should see the following products in her cart")
     public void sheShouldSeeTheFollowingProductsInHerCart() {
+        // Implementation to verify products in the cart can be added here.
     }
 
+    /**
+     * Removes all products from Sally's cart based on the provided DataTable.
+     *
+     * @param productTable A DataTable containing product names to remove.
+     */
     @And("Sally removes all products from her cart")
     public void sallyRemovesAllProductsFromHerCart(DataTable productTable) {
-        int initialCartCount = productList.getCartCount();
+        int initialCartCount = productListPage.getCartCount();
         System.out.println("Initial cart count: " + initialCartCount);
 
         List<Map<String, String>> products = productTable.asMaps(String.class, String.class);
 
         for (Map<String, String> product : products) {
             String productName = product.get("product");
-            productList.removeProductFromCart(productName);
+            productListPage.removeProductFromCart(productName);
         }
     }
 
+    /**
+     * Logs in Sally using credentials based on the user type specified in environment variables.
+     * The method retrieves the user type from the environment, determines the corresponding
+     * username and password, and logs in Sally by navigating to the login page and submitting the credentials.
+     */
     @Given("Sally logs in")
     public void sallyHasLoggedInWithHerAccount() {
+        // Retrieve the user type from environment variables, defaulting to "standard_user"
         String user_type = dotenv.get("USER_TYPE", "standard_user");
-        // Load environment variables
-        String username = "";
-        String password = "";
+
+        // Initialize username and password variables
+        String username;
+        String password;
+
+        // Determine the username and password based on the user type
         switch (user_type) {
             case "standard_user":
                 System.out.println("Logging in as standard user");
@@ -271,19 +334,25 @@ public class PlaywrightCucumberStepDefinitions {
                 password = dotenv.get("VISUAL_PASSWORD", "secret_sauce");
                 break;
             default:
+                // Throw an exception if the user type is unknown
                 throw new IllegalArgumentException("Unknown user type: " + user_type);
         }
 
         // Navigate to the login page
         loginPage.openHomePage();
+
+        // Create a User object with the determined credentials and log in
         User currentUser = new User(username, password);
         loginPage.loginUser(currentUser);
     }
 
+    /**
+     * Begins the checkout process by clicking the checkout button and verifying the checkout page.
+     */
     @When("Sally begins the checkout process")
     public void sheProceedsToCheckout() {
         // Click on the checkout button
-        productList.clickCheckoutButton();
+        productListPage.clickCheckoutButton();
         // Verify that the checkout page is displayed
         assertThat(checkoutInformationPage.checkPageUrl())
                 .as("Checkout overview page URL should be correct")
@@ -292,10 +361,13 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(checkoutInformationPage.checkTitle())
                 .as("Checkout page title should be 'Checkout: Your Information'")
                 .isTrue();
-        System.out.println("Checkout page title: " + checkoutInformationPage.getTitle());
     }
 
-
+    /**
+     * Fills in Sally's personal information on the checkout page.
+     *
+     * @param personalInfoTable A DataTable containing Sally's personal information.
+     */
     @Then("Sally fills in her personal information")
     public void sheFillsInHerPersonalInformation(DataTable personalInfoTable) {
         checkoutInformationPage.fillInPersonalInformation(personalInfoTable);
@@ -304,15 +376,20 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(checkoutInformationPage.checkTitle())
                 .as("Checkout information page title should be 'Checkout: Your Information'")
                 .isTrue();
-        System.out.println("Checkout information page title: " + checkoutInformationPage.getTitle());
     }
 
+    /**
+     * Continues to the overview page for review and verifies the subtotal and product details.
+     *
+     * @param productsInCart A DataTable containing the products in the cart.
+     */
     @And("Sally continues to the overview page for review")
     public void sheShouldBeOnTheOverviewPage(DataTable productsInCart) {
         checkoutInformationPage.buttonClick("continue");
         double actualSubTotal = checkoutOverviewPage.getSubTotalPrice();
         double expectedSubTotal = productsInCart.asMaps(String.class, String.class).stream()
-                .mapToDouble(product -> shoppingCartPage.removeDollarSignFromPrice(product.get("total")))
+                .mapToDouble(product ->
+                        shoppingCartPage.removeDollarSignFromPrice(product.get("total")))
                 .sum();
 
         // Verify that the overview page is displayed
@@ -328,9 +405,11 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(String.format("%.2f", actualSubTotal))
                 .as("Total price should match expected value")
                 .isEqualTo(String.format("%.2f", expectedSubTotal));
-
     }
 
+    /**
+     * Views the cart and verifies that all products have been removed.
+     */
     @Then("Sally views her cart and checks that all the products have been removed")
     public void sallyViewsHerCartAndChecksThatAllTheProductsHaveBeenRemoved() {
         // Navigate to the cart page
@@ -350,6 +429,11 @@ public class PlaywrightCucumberStepDefinitions {
         System.out.println("Cart count after removal: " + cartCount);
     }
 
+    /**
+     * Verifies that the total price displayed matches the expected value.
+     *
+     * @param totalPrice The expected total price.
+     */
     @And("Sally checks the price total confirming that it is {double}")
     public void theTotalPriceShouldBe(Double totalPrice) {
         // Verify that the total price is displayed correctly
@@ -358,27 +442,39 @@ public class PlaywrightCucumberStepDefinitions {
                 .as("Total price should match expected value")
                 .isEqualTo("Total: $" + String.format("%.2f", totalPrice));
         System.out.println(displayedTotalPrice);
-
     }
 
+    /**
+     * Completes the checkout process by clicking the finish button on the overview page.
+     */
     @When("Sally clicks on the finish button")
     public void sheClicksOnTheButton() {
         // Click on the specified button
         checkoutOverviewPage.finishButtonClick();
     }
 
+    /**
+     * Verifies that the order confirmation message and the checkout complete page title are displayed correctly.
+     */
     @Then("she should see the confirmation message")
     public void sheShouldSeeTheConfirmationMessage() {
+        // Verify the URL of the checkout complete page
+        assertThat(checkoutCompletePage.checkPageUrl())
+                .as("Checkout complete page URL should be correct" )
+                .isTrue();
         // Verify that the order confirmation message is displayed
         assertThat(checkoutCompletePage.getOrderConfirmationMessage())
                 .as("Order confirmation message should match expected value")
                 .isTrue();
-        // Verify that the checkout complete page title  is correct
+        // Verify that the checkout complete page title is correct
         assertThat(checkoutCompletePage.checkPageTitle())
                 .as("Checkout complete page title should match expected value")
                 .isTrue();
     }
 
+    /**
+     * Verifies that the title of the checkout complete page is displayed correctly.
+     */
     @And("the title is confirm")
     public void theTitleShouldBe() {
         // Verify that the title is displayed correctly
@@ -387,12 +483,17 @@ public class PlaywrightCucumberStepDefinitions {
                 .isTrue();
     }
 
+    /**
+     * Removes a specific product from Sally's cart and verifies the cart count is updated correctly.
+     *
+     * @param productName The name of the product to remove.
+     */
     @When("Sally removes the {string} from her cart")
     public void sallyRemovesTheFromHerCart(String productName) {
         // First, get the current cart count
         int initialCartCount = shoppingCartPage.getCartCount();
         System.out.println("Initial cart count: " + initialCartCount);
-        // Next, add the product to the cart
+        // Remove the product from the cart
         shoppingCartPage.removeProductFromCart(productName);
         // Verify that the product is removed from the cart by checking the cart count against the initial count
         int finalCartCount = shoppingCartPage.getCartCount();
@@ -400,65 +501,156 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(finalCartCount)
                 .as("Cart count should be less than initial count after removing a product")
                 .isLessThan(initialCartCount);
-
     }
 
+    /**
+     * Cancels the order from the overview page and verifies that Sally is redirected to the cart page.
+     */
     @Then("Sally continues to the overview page for review only to cancel the order")
     public void sheContinuesToTheOverviewPageForReviewOnlyToCancelTheOrder() {
-        // Click on the specified button
+        // Click on the cancel button
         checkoutOverviewPage.cancelButtonClick();
         // Verify that the user is redirected to the product list page
         assertThat(shoppingCartPage.checkPageUrl())
                 .as("Cart page URL should be true")
                 .isTrue();
-        assertThat(shoppingCartPage.getTitle())
-                .as("Cart title should be 'Your Cart'")
-                .isEqualTo("Your Cart");
-//        // Verify that the user is redirected to the cart page
-//        assertThat(productList.checkPageUrl())
-//                .as("Product page URL should be correct")
-//                .isTrue();
-//        assertThat(productList.getTitle())
-//                .as("Product page title should be 'Products'")
-//                .isEqualTo(PRODUCT_LIST_PAGE_TITLE);
-//        System.out.println("Cart page title: " + shoppingCartPage.getTitle());
+        // Check the cart page title
+        assertThat(shoppingCartPage.checkPageTitle())
+                .as("Cart title should be " + shoppingCartPage.getTitle())
+                .isTrue();
     }
 
+    /**
+     * Cancels the order from the information page and verifies that Sally is redirected to the cart page.
+     */
     @Then("Sally continues to the information page for review only to cancel the order")
     public void sheContinuesToTheInformationPageForReviewOnlyToCancelTheOrder() {
-        // Fill out the personal information form
         // Check page title
         assertThat(checkoutInformationPage.checkTitle())
                 .as("Checkout information page title should be 'Checkout: Your Information'")
                 .isTrue();
-        System.out.println("Checkout information page title: " + checkoutInformationPage.getTitle());
+        assertThat(checkoutOverviewPage.checkPageUrl())
+                .as("Checkout overview page URL should be correct")
+                .isTrue();
         // Click on the cancel button
         checkoutInformationPage.cancelButtonClick();
         // Verify that the user is redirected to the product list page
         assertThat(shoppingCartPage.checkPageUrl())
                 .as("Cart page URL should be true")
                 .isTrue();
-        assertThat(shoppingCartPage.getTitle())
-                .as("Cart title should be 'Your Cart'")
-                .isEqualTo("Your Cart");
-        System.out.println("Cart page title: " + productList.getTitle());
+        assertThat(shoppingCartPage.checkPageTitle())
+                .as("Cart title should be " + shoppingCartPage.getTitle())
+                .isTrue();
     }
 
-//    @And("Sally clicks on the checkout information cancel button")
-//    public void sallyClicksOnTheCheckoutInformationCancelButton() {
-//
-//    }
+    /**
+     * Sally views the details of a specific product by clicking on its name.
+     *
+     * @param productName The name of the product to view details for.
+     */
+    @When("Sally views the details of the {string} by clicking on the product name")
+    public void sallyViewsTheDetailsOfTheByClickingOnTheProductName(String productName) {
+        // Click on the product name to view details
+        productListPage.clickOnProductName(productName);
+        // Wait for the product details page to load
+        productDetailsPage.waitForPageLoad();
+        // Verify that the product details page is displayed
+        assertThat(productDetailsPage.checkPageUrl())
+                .as("Product details page URL should be correct")
+                .isTrue();
+        assertThat(productDetailsPage.checkTitle())
+                .as("Product details page title should be" + productDetailsPage.getTitle())
+                .isTrue();
+    }
 
+    /**
+     * Verifies that the product details page displays the expected information for the specified products.
+     *
+     * @param productTable A DataTable containing product details to verify.
+     */
+    @Then("the product details page should display the following information")
+    public void theProductDetailsPageShouldDisplayTheFollowingInformation(DataTable productTable) {
+        // Verify that the product details page displays the expected information
+        List<Map<String, String>> products = productTable.asMaps(String.class, String.class);
+        for (Map<String, String> product : products) {
+            String productName = product.get("product_name");
+            String productDescription = product.get("description");
+            String productPrice = product.get("price");
+            boolean takeScreenshot = productDetailsPage.takeScreenshot(productName);
+            assertThat(takeScreenshot)
+                    .as("Screenshot should be taken successfully")
+                    .isTrue();
+            assertThat(productDetailsPage.getProductName())
+                    .as("Product name should match expected value")
+                    .isEqualTo(productName);
+            assertThat(productDetailsPage.getProductPrice())
+                    .as("Product price should match expected value")
+                    .isEqualTo(productPrice);
+            assertThat(productDetailsPage.getProductDescription())
+                    .as("Product description should match expected value")
+                    .isEqualTo(productDescription);
+            System.out.println("Product name: " + productDetailsPage.getProductName());
+            System.out.println("Product description: " + productDetailsPage.getProductDescription());
+            System.out.println("Product price: " + productDetailsPage.getProductPrice());
+        }
+    }
 
-//    @Then("she should be redirected to the cart page")
-//    public void sheShouldBeRedirectedToTheShoppingCartPage() {
-//        // Verify that the user is redirected to the product list page
-//        assertThat(shoppingCartPage.checkPageUrl())
-//                .as("Cart page URL should be true")
-//                .isTrue();
-//        assertThat(shoppingCartPage.getTitle())
-//                .as("Cart title should be 'Your Cart'")
-//                .isEqualTo("Your Cart");
-//        System.out.println("Cart page title: " + productList.getTitle());
-//    }
+    /**
+     * Verifies that the product image for the specified product is displayed on the product details page.
+     *
+     * @param productName The name of the product to check for its image.
+     */
+    @And("the product image for {string} should be displayed")
+    public void theProductImageShouldBeDisplayed(String productName) {
+        // Verify that the product image is displayed on the product details page
+
+        assertThat(productDetailsPage.getProductImage(productName))
+                .as("Product image should be displayed")
+                .isNotNull();
+        System.out.println("Product image is displayed.");
+    }
+
+    /**
+     * Verifies that the product price displayed on the product details page matches the expected value.
+     *
+     * @param price The expected price of the product.
+     */
+    @And("the price should be {string}")
+    public void thePriceShouldBe(String price) {
+        // Verify that the product price is displayed correctly
+        assertThat(productDetailsPage.getProductPrice())
+                .as("Product price should match expected value")
+                .isEqualTo(price);
+        System.out.println("Product price: " + productDetailsPage.getProductPrice());
+    }
+
+    /**
+     * Sally continues shopping after adding products to her cart by navigating back to the product list page.
+     */
+    @When("Sally continues shopping after adding products to her cart")
+    public void sallyContinuesShoppingAfterAddingProductsToHerCart() {
+        // Proceed to the shopping cart page
+        shoppingCartPage.openShoppingCartPage();
+        // Verify that the cart page is displayed
+        assertThat(shoppingCartPage.checkPageUrl())
+                .as("Cart page URL should be correct")
+                .isTrue();
+        assertThat(shoppingCartPage.checkPageTitle())
+                .as("Cart title should be 'Your Cart'")
+                .isTrue();
+        // Go back to the product list page by clicking the continue shopping button
+        shoppingCartPage.continueShopping();
+
+    }
+
+    @Then("she should be able to view the inventory page and add more products")
+    public void sheShouldBeAbleToViewTheInventoryPageAndAddMoreProducts() {
+        // Verify that the product list page is displayed
+        assertThat(productListPage.checkPageUrl())
+                .as("Product list page URL should be correct")
+                .isTrue();
+        assertThat(productListPage.checkTitle())
+                .as("Product list title should be 'Products'")
+                .isTrue();
+    }
 }
