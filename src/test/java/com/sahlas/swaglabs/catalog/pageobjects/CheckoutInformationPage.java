@@ -18,8 +18,8 @@ public class CheckoutInformationPage {
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
             .load();
-    private static final String CHECK_OUT_INFORMATION_PAGE_TITLE = dotenv.get("CHECK_OUT_INFORMATION_PAGE_TITLE", "Checkout: Your Information");
-    private static final String URL = dotenv.get("URL", "https://www.saucedemo.com/");
+    private static final String CHECK_OUT_INFORMATION_PAGE_TITLE = dotenv.get("CHECKOUT_INFORMATION_PAGE_TITLE", "Checkout: Your Information");
+    private static final String CHECKOUT_INFORMATION_PAGE_URL = dotenv.get("CHECKOUT_INFORMATION_PAGE_URL", "https://www.saucedemo.com/");
     private final Page page;
 
     /**
@@ -105,7 +105,7 @@ public class CheckoutInformationPage {
     @Step("Check the current URL of the checkout information page")
     public boolean checkPageUrl() {
         String currentUrl = page.url();
-        boolean isUrlCorrect = currentUrl.equals(URL + "checkout-step-one.html");
+        boolean isUrlCorrect = currentUrl.equals(CHECKOUT_INFORMATION_PAGE_URL);
         if (isUrlCorrect) {
             System.out.println("Current URL is correct: " + currentUrl);
         } else {

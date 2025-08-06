@@ -77,7 +77,7 @@ public class ProductDetailsPage implements TakesFinalScreenshot {
     @Step("Check if the page title is correct")
     public boolean checkTitle() {
         // Get the title of the page
-        String title = page.title();
+        String title = getTitle();
         // Check if the title matches the expected product details page title
         return title.equals(PRODUCT_DETAILS_PAGE_TITLE);
     }

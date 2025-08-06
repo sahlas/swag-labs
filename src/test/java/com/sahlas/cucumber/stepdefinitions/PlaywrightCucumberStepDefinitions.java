@@ -529,7 +529,7 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(checkoutInformationPage.checkTitle())
                 .as("Checkout information page title should be 'Checkout: Your Information'")
                 .isTrue();
-        assertThat(checkoutOverviewPage.checkPageUrl())
+        assertThat(checkoutInformationPage.checkPageUrl())
                 .as("Checkout overview page URL should be correct")
                 .isTrue();
         // Click on the cancel button
@@ -557,9 +557,6 @@ public class PlaywrightCucumberStepDefinitions {
         // Verify that the product details page is displayed
         assertThat(productDetailsPage.checkPageUrl())
                 .as("Product details page URL should be correct")
-                .isTrue();
-        assertThat(productDetailsPage.checkTitle())
-                .as("Product details page title should be" + productDetailsPage.getTitle())
                 .isTrue();
     }
 

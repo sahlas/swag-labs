@@ -224,7 +224,7 @@ public class ProductListPage implements TakesFinalScreenshot {
         String title = getTitle();
 
         // Check if the title matches the expected product list page title
-        boolean isTitleCorrect = title.equals("Swag Labs");
+        boolean isTitleCorrect = title.equals("Products");
         if (isTitleCorrect) {
             System.out.println("Page title is correct: " + title);
             ScreenshotManager.takeScreenshot(page, "page-title-correct");
