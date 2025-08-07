@@ -2,7 +2,7 @@ name: Run Tests and Generate Allure Report
 
 on:
   workflow_dispatch:
-    # Allows manual triggering of the workflow
+  # Allows manual triggering of the workflow
   push:
     branches: [ main ]
   pull_request:
@@ -10,7 +10,7 @@ on:
       - '**'
 
 jobs:
-  test:
+  playwright-java-cucumber-tests:
     runs-on: ubuntu-latest
 
     steps:

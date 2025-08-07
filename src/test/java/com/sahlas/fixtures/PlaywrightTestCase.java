@@ -22,11 +22,6 @@ public abstract class PlaywrightTestCase {
     static final boolean HEADLESS = HEADLESS_STRING.equalsIgnoreCase("true");
     static final String BROWSER_ARGS_STRING = dotenv.get("BROWSER_ARGS", "");
     static final String[] BROWSER_ARGS = BROWSER_ARGS_STRING.isBlank() ? new String[0] : BROWSER_ARGS_STRING.split(",");
-
-    static final int TIMEOUT = Integer.parseInt(dotenv.get("TIMEOUT", "30000"));
-    static final int RETRY_COUNT = Integer.parseInt(dotenv.get("RETRY_COUNT", "3"));
-    static final int RETRY_DELAY = Integer.parseInt(dotenv.get("RETRY_DELAY", "1000"));
-    static final int NAVIGATION_TIMEOUT = Integer.parseInt(dotenv.get("NAVIGATION_TIMEOUT", "30000"));
     protected static ThreadLocal<Playwright> playwright
             = ThreadLocal.withInitial(() -> {
                 Playwright playwright = Playwright.create();
@@ -70,6 +65,11 @@ public abstract class PlaywrightTestCase {
                 }
             }
     );
+    static final int TIMEOUT = Integer.parseInt(dotenv.get("TIMEOUT", "30000"));
+    static final int RETRY_COUNT = Integer.parseInt(dotenv.get("RETRY_COUNT", "3"));
+    static final int RETRY_DELAY = Integer.parseInt(dotenv.get("RETRY_DELAY", "1000"));
+    static final int NAVIGATION_TIMEOUT = Integer.parseInt(dotenv.get("NAVIGATION_TIMEOUT", "30000"));
+
     protected BrowserContext browserContext;
 
     protected Page page;

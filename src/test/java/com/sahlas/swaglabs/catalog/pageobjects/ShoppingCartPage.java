@@ -3,6 +3,7 @@ package com.sahlas.swaglabs.catalog.pageobjects;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.sahlas.fixtures.ScreenshotManager;
+import com.sahlas.fixtures.TakesFinalScreenshot;
 import io.cucumber.datatable.DataTable;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
@@ -27,17 +28,10 @@ public class ShoppingCartPage {
      * Navigates to the shopping cart page using the configured URL.
      * This method uses Playwright's page.navigate() to load the shopping cart page.
      */
-    @Step("value = 'Open shopping cart page'")
+    @Step("Open shopping cart page")
     public void openShoppingCartPage() {
         // Navigate to the shopping cart page
         page.navigate(SHOPPING_CART_PAGE_URL);
-    }
-
-    @Step("Get URL of the shopping cart page")
-    public String getUrl() {
-        // Return the URL of the shopping cart page
-        ScreenshotManager.takeScreenshot(page, "shopping-cart-page-url");
-        return page.url();
     }
 
     @Step("Get the title of the shopping cart page")
@@ -57,7 +51,7 @@ public class ShoppingCartPage {
      *
      * @return String The shopping cart page URL configured in SHOPPING_CART_PAGE_URL
      */
-    @Step("value = 'Get shopping cart page URL'")
+    @Step("Get shopping cart page URL")
     public boolean checkPageUrl() {
 
         // Log the URL for debugging purposes
@@ -85,12 +79,12 @@ public class ShoppingCartPage {
         String title = page.getByTestId("title").textContent();
         // Check if the title matches the expected "Your Cart" text
         boolean isTitleCorrect = title.equals(SHOPPING_CART_PAGE_TITLE);
-        // Take screenshot for test evidence
-        ScreenshotManager.takeScreenshot(page, "shopping-cart-title");
         // Log the verification result
         if (isTitleCorrect) {
             System.out.println("Checkout page title is correct: " + title);
         } else {
+            // Take screenshot for test evidence
+            ScreenshotManager.takeScreenshot(page, "shopping-cart-page-title");
             System.out.println("Checkout page title is incorrect: " + title);
         }
         return isTitleCorrect;
@@ -104,7 +98,7 @@ public class ShoppingCartPage {
      * @return int The number of items in the cart. Returns 0 if the cart badge is not visible
      * (indicating an empty cart or UI issue).
      */
-    @Step("value = 'Get cart count'")
+    @Step("Get cart count")
     public int getCartCount() {
         // First check to see if the shopping cart badge is present
         if (!page.getByTestId("shopping-cart-badge").isVisible()) {
@@ -115,9 +109,7 @@ public class ShoppingCartPage {
         } else {
             // Cart badge is visible - extract and parse the item count
             System.out.println("Shopping cart icon is visible");
-            int cartCount = Integer.parseInt(page.getByTestId("shopping-cart-badge").textContent());
-            ScreenshotManager.takeScreenshot(page, "cart-count");
-            return cartCount;
+            return Integer.parseInt(page.getByTestId("shopping-cart-badge").textContent());
         }
     }
 
@@ -189,39 +181,7 @@ public class ShoppingCartPage {
         });
     }
 
-    /**
-     * Retrieves all checkout line items from the shopping cart.
-     * This method extracts product information from the cart UI elements and converts
-     * them into CheckoutLineItem objects for further processing.
-     *
-     * @return List of CheckoutLineItem objects containing product name, quantity, and price.
-     * Returns an empty list if no items are found in the cart.
-     */
-    public List<CheckoutLineItem> getCheckoutItems() {
-        // Locate the cart list container element
-        Locator cartList = page.getByTestId("cart-list");
 
-        // Check if cart is empty and return empty list if no items found
-        if (cartList.all().isEmpty()) {
-            System.out.println("No items found in the cart.");
-            return List.of();
-        }
-
-        // Get all inventory items from the first cart list element
-        List<Locator> subItems = cartList.all().get(0).getByTestId("inventory-item").all();
-        System.out.println("There were: " + subItems.size() + " items found.");
-
-        // Transform each cart item locator into a CheckoutLineItem object
-        return subItems.stream()
-                .map(subItem -> new CheckoutLineItem(
-                        // Extract and clean product name
-                        trimmedProductTitle(subItem.getByTestId("inventory-item-name").textContent()),
-                        // Parse quantity as integer
-                        Integer.parseInt(subItem.getByTestId("item-quantity").textContent()),
-                        // Extract and clean price (note: should use removeDollarSignFromPrice for proper price handling)
-                        subItem.getByTestId("inventory-item-price").textContent()
-                )).toList();
-    }
 
     private String trimmedProductTitle(String value) {
         return value.strip().replaceAll("\u00A0", "");
@@ -241,12 +201,40 @@ public class ShoppingCartPage {
      */
     @Step("Sally removes the product from her cart by product name")
     public void removeProductFromCart(String productName) {
-        // Locate the product in the cart by its name
-        Locator product = page.getByTestId("inventory-item").getByText(productName);
+        // Take a screenshot before removing the product
+        ScreenshotManager.takeScreenshot(page, "product-before-removal-" + productName);
         // Click the remove button for the specified product
         Locator removeFromCartButton = page.getByTestId("remove-" + productName.toLowerCase().replace(" ", "-"));
         removeFromCartButton.click();
         // Take a screenshot after removing the product
         ScreenshotManager.takeScreenshot(page, "product-removed-from-cart-" + productName);
+    }
+
+    /**
+     * Navigates back to the product list page by clicking the "Continue Shopping" button.
+     * This method uses Playwright's Locator to find the button by its test ID and clicks it.
+     * A screenshot is taken after clicking the continue shopping button for verification purposes.
+     */
+    @Step("Continue shopping")
+    public void continueShopping() {
+        // Click the continue shopping button to navigate back to the product list page
+        Locator continueShoppingButton = page.getByTestId("continue-shopping");
+        continueShoppingButton.click();
+        // Take a screenshot after clicking the continue shopping button
+        ScreenshotManager.takeScreenshot(page, "continue-shopping-button-clicked");
+    }
+
+    /**
+     * Navigates back to the product list page by clicking the "Back to Products" button.
+     * This method uses Playwright's Locator to find the button by its test ID and clicks it.
+     * A screenshot is taken after clicking the back to products button for verification purposes.
+     */
+    @Step("Back to products")
+    public void backToProducts() {
+        // Click the back to products button to navigate back to the product list page
+        Locator backToProductsButton = page.getByTestId("back-to-products");
+        backToProductsButton.click();
+        // Take a screenshot after clicking the back to products button
+        ScreenshotManager.takeScreenshot(page, "back-to-products-button-clicked");
     }
 }

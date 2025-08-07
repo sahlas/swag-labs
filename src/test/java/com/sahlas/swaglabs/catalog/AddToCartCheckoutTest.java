@@ -4,18 +4,18 @@ import com.microsoft.playwright.junit.UsePlaywright;
 import com.sahlas.fixtures.BrowserOptionsFactory;
 import com.sahlas.fixtures.TakesFinalScreenshot;
 import com.sahlas.swaglabs.catalog.pageobjects.LoginPage;
-import com.sahlas.swaglabs.catalog.pageobjects.ProductList;
+import com.sahlas.swaglabs.catalog.pageobjects.ProductListPage;
 
 
 @UsePlaywright(BrowserOptionsFactory.class)
-public class AddToCartCheckoutTest implements TakesFinalScreenshot {
+public class AddToCartCheckoutTest {
     LoginPage loginPage;
-    ProductList productList;
+    ProductListPage productListPage;
 
 //    @BeforeEach
 //    void setUp(Page page) {
 //        loginPage = new LoginPage(page);
-//        productList = new ProductList(page);
+//        productListPage = new ProductListPage(page);
 ////        productDetails = new ProductDetails(page);
 ////        checkoutPage = new CheckoutInformationPage(page);
 //    }
@@ -31,8 +31,8 @@ public class AddToCartCheckoutTest implements TakesFinalScreenshot {
 //    @Test
 //    @DisplayName("Should show the page title")
 //    void shouldShowThePageTitle(Page page) {
-//        productList = new ProductList(page);
-//        Assertions.assertThat(productList.getTitle()).contains("Products")
+//        productListPage = new ProductListPage(page);
+//        Assertions.assertThat(productListPage.getTitle()).contains("Products")
 //                .as("Page title should contain 'Products'");
 //    }
 }

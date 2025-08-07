@@ -13,7 +13,7 @@ import io.qameta.allure.Step;
  * Provides methods to interact with the login page, such as logging in, retrieving the page title,
  * handling error messages, and navigating to the home page.
  */
-public class LoginPage implements TakesFinalScreenshot {
+public class LoginPage {
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
             .load();
@@ -81,8 +81,21 @@ public class LoginPage implements TakesFinalScreenshot {
         ScreenshotManager.takeScreenshot(page, "home-page");
     }
 
-    public boolean gtetUrl() {
+    /**
+     * Checks if the current page URL matches the expected product list page URL.
+     * This method captures a screenshot if the URL is not correct.
+     * @return boolean true if the current URL matches the expected URL, false otherwise.
+     */
+    @Step("Check if the current page URL is correct")
+    public boolean checkPageUrl() {
         String currentUrl = page.url();
-        return currentUrl.equals(URL);
+        boolean isCorrectUrl = currentUrl.equals(URL);
+        if (isCorrectUrl) {
+            System.out.println("Current URL is correct: " + currentUrl);
+        } else {
+            System.out.println("Current URL is not correct: " + currentUrl);
+            ScreenshotManager.takeScreenshot(page, "current-url-not-correct");
+        }
+        return isCorrectUrl;
     }
 }
