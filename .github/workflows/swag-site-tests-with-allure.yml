@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: traces
-          path: target/traces/*.zip
+          path: target/traces/${{ matrix.group }}-*.zip
 
       - name: Load test report history
         uses: actions/checkout@v3
