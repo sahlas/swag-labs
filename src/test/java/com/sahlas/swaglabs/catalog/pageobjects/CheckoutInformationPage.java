@@ -2,6 +2,7 @@ package com.sahlas.swaglabs.catalog.pageobjects;
 
 import com.microsoft.playwright.Page;
 import com.sahlas.fixtures.ScreenshotManager;
+import com.sahlas.fixtures.TakesFinalScreenshot;
 import io.cucumber.datatable.DataTable;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
@@ -44,7 +45,6 @@ public class CheckoutInformationPage {
         boolean isTitleCorrect = title.equals(CHECK_OUT_INFORMATION_PAGE_TITLE);
         if (isTitleCorrect) {
             System.out.println("Checkout information page title is correct: " + title);
-            ScreenshotManager.takeScreenshot(page, "checkout-information-title-" + title);
         } else {
             System.out.println("Checkout information page title is incorrect: " + title);
             ScreenshotManager.takeScreenshot(page, "checkout-information-title-" + title);
@@ -109,6 +109,7 @@ public class CheckoutInformationPage {
         if (isUrlCorrect) {
             System.out.println("Current URL is correct: " + currentUrl);
         } else {
+            ScreenshotManager.takeScreenshot(page, "Current URL is incorrect");
             System.out.println("Current URL is incorrect: " + currentUrl);
         }
         return isUrlCorrect;

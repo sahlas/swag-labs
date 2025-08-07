@@ -2,6 +2,7 @@ package com.sahlas.swaglabs.catalog.pageobjects;
 
 import com.microsoft.playwright.Page;
 import com.sahlas.fixtures.ScreenshotManager;
+import com.sahlas.fixtures.TakesFinalScreenshot;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
 
@@ -29,7 +30,6 @@ public class CheckoutCompletePage {
         boolean isMessageCorrect = orderConfirmationMessage.equals(CHECKOUT_COMPLETE_CONFIRMATION_MESSAGE);
         if (isMessageCorrect) {
             System.out.println("Order confirmation message is correct: " + orderConfirmationMessage);
-            ScreenshotManager.takeScreenshot(page, "order-confirmation-message-" + orderConfirmationMessage);
         } else {
             System.out.println("Order confirmation message is incorrect: " + orderConfirmationMessage);
             ScreenshotManager.takeScreenshot(page, "order-confirmation-message-" + orderConfirmationMessage);
@@ -51,7 +51,6 @@ public class CheckoutCompletePage {
         boolean isTitleCorrect = title.equals(CHECKOUT_COMPLETE_PAGE_TITLE);
         if (isTitleCorrect) {
             System.out.println("Checkout complete page title is correct: " + title);
-            ScreenshotManager.takeScreenshot(page, "checkout-complete-title" + title);
         } else {
             System.out.println("Checkout complete page title is incorrect: " + title);
             ScreenshotManager.takeScreenshot(page, "checkout-complete-title" + title);
@@ -66,7 +65,6 @@ public class CheckoutCompletePage {
         boolean isUrlCorrect = currentUrl.equals(CHECKOUT_COMPLETE_PAGE_URL);
         if (isUrlCorrect) {
             System.out.println("Checkout complete page URL is correct: " + currentUrl);
-            ScreenshotManager.takeScreenshot(page, "checkout-complete-url-" + currentUrl);
         } else {
             System.out.println("Checkout complete page URL is incorrect: " + currentUrl);
             ScreenshotManager.takeScreenshot(page, "checkout-complete-url-" + currentUrl);

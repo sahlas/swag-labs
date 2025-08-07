@@ -7,7 +7,7 @@ import com.sahlas.fixtures.TakesFinalScreenshot;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
 
-public class ProductListPage implements TakesFinalScreenshot {
+public class ProductListPage {
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
             .load();
@@ -141,9 +141,7 @@ public class ProductListPage implements TakesFinalScreenshot {
             return 0;
         } else {
             System.out.println("Shopping cart icon is visible");
-            int cartCount = Integer.parseInt(page.getByTestId("shopping-cart-badge").textContent());
-            ScreenshotManager.takeScreenshot(page, "cart-count");
-            return cartCount;
+            return Integer.parseInt(page.getByTestId("shopping-cart-badge").textContent());
         }
     }
 
@@ -156,7 +154,6 @@ public class ProductListPage implements TakesFinalScreenshot {
     public void clickCheckoutButton() {
         // Click the checkout button on the cart page
         page.getByTestId("checkout").click();
-        ScreenshotManager.takeScreenshot(page, "checkout-button-clicked");
     }
 
 
@@ -183,7 +180,7 @@ public class ProductListPage implements TakesFinalScreenshot {
      * This method captures a screenshot if the title is not correct.
      * @return boolean true if the current title matches the expected title, false otherwise.
      */
-    @Step("Chck if product button is enabled or marked for removal")
+    @Step("Check if product button is enabled or marked for removal")
     public boolean getProductButtonState(String productName) {
 
         Locator productButton = page.getByTestId("remove-" + productName.toLowerCase().replace(" ", "-"));
@@ -227,7 +224,6 @@ public class ProductListPage implements TakesFinalScreenshot {
         boolean isTitleCorrect = title.equals("Products");
         if (isTitleCorrect) {
             System.out.println("Page title is correct: " + title);
-            ScreenshotManager.takeScreenshot(page, "page-title-correct");
         } else {
             System.out.println("Page title is not correct: " + title);
             ScreenshotManager.takeScreenshot(page, "page-title-not-correct");

@@ -8,7 +8,7 @@ import com.sahlas.swaglabs.catalog.pageobjects.ProductListPage;
 
 
 @UsePlaywright(BrowserOptionsFactory.class)
-public class AddToCartCheckoutTest implements TakesFinalScreenshot {
+public class AddToCartCheckoutTest {
     LoginPage loginPage;
     ProductListPage productListPage;
 

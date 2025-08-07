@@ -3,6 +3,7 @@ package com.sahlas.swaglabs.catalog.pageobjects;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.sahlas.fixtures.ScreenshotManager;
+import com.sahlas.fixtures.TakesFinalScreenshot;
 import io.cucumber.datatable.DataTable;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
@@ -37,7 +38,6 @@ public class CheckoutOverviewPage {
         boolean isTitleCorrect = title.equals(CHECKOUT_OVERVIEW_PAGE_TITLE);
         if (isTitleCorrect) {
             System.out.println("Checkout overview page title is correct: " + title);
-            ScreenshotManager.takeScreenshot(page, "checkout-overview-title-" + title);
         } else {
             System.out.println("Checkout overview page title is incorrect: " + title);
             ScreenshotManager.takeScreenshot(page, "checkout-overview-title-" + title);
@@ -75,7 +75,7 @@ public class CheckoutOverviewPage {
      * @param expectedProductNames An array of expected product names.
      * @return true if all expected product names are present, false otherwise.
      */
-    @Step("value = 'Check product names'")
+    @Step("Check product names")
     public boolean checkProductNames(String[] expectedProductNames) {
         List<Locator> productNames = page.getByTestId("inventory-item-name").all();
         boolean allNamesPresent = true;
@@ -94,7 +94,6 @@ public class CheckoutOverviewPage {
      */
     @Step("Click the Finish button")
     public void finishButtonClick() {
-        ScreenshotManager.takeScreenshot(page, "finish-button-click");
         // Click the finish button
         page.getByTestId("finish").click();
         System.out.println("Clicked on the Finish button");
@@ -127,8 +126,6 @@ public class CheckoutOverviewPage {
      */
     @Step("Get the subtotal price of the items in the cart")
     public double getSubTotalPrice() {
-        // Get the subtotal price from the overview page
-        ScreenshotManager.takeScreenshot(page, "subtotal-label");
         // The subtotal price is displayed in an element with the test ID "subtotal-label"
         return removeDollarSignFromPrice(page.getByTestId("subtotal-label").textContent());
     }
@@ -159,7 +156,6 @@ public class CheckoutOverviewPage {
         boolean isUrlCorrect = url.equals(CHECKOUT_OVERVIEW_PAGE_URL);
         if (isUrlCorrect) {
             System.out.println("Checkout overview page URL is correct: " + url);
-            ScreenshotManager.takeScreenshot(page, "checkout-overview-url-" + url);
         } else {
             System.out.println("Checkout overview page URL is incorrect: " + url);
             ScreenshotManager.takeScreenshot(page, "checkout-overview-url-" + url);

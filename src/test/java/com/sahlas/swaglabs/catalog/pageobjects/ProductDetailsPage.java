@@ -7,7 +7,7 @@ import com.sahlas.fixtures.TakesFinalScreenshot;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.qameta.allure.Step;
 
-public class ProductDetailsPage implements TakesFinalScreenshot {
+public class ProductDetailsPage {
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
             .load();
@@ -25,9 +25,9 @@ public class ProductDetailsPage implements TakesFinalScreenshot {
     }
 
     /**
-     * Get the URL of the product details page.
+     * Get the product name from the product details page.
      *
-     * @return The URL of the product details page.
+     * @return The name of the product.
      */
     @Step("Get Product Name")
     public String getProductName() {
@@ -35,10 +35,9 @@ public class ProductDetailsPage implements TakesFinalScreenshot {
         return page.getByTestId("inventory-item-name").textContent(); // Placeholder return value
     }
 
-    /**
-     * Get the URL of the product details page.
+    /** Get the product price from the product details page.
      *
-     * @return The URL of the product details page.
+     * @return The price of the product.
      */
     @Step("Get Product Price")
     public String getProductPrice() {
@@ -47,9 +46,9 @@ public class ProductDetailsPage implements TakesFinalScreenshot {
     }
 
     /**
-     * Get the URL of the product details page.
+     *  Get the product description from the product details page.
      *
-     * @return The URL of the product details page.
+     * @return The description of the product.
      */
     @Step("Get Product Description")
     public String getProductDescription() {
@@ -58,9 +57,9 @@ public class ProductDetailsPage implements TakesFinalScreenshot {
     }
 
     /**
-     * Get the URL of the product details page.
+     * Check if the page URL is correct.
      *
-     * @return The URL of the product details page.
+     * @return true if the URL matches the expected product details page URL, false otherwise.
      */
     @Step("Check if the page URL is correct")
     public boolean checkPageUrl() {
@@ -76,10 +75,21 @@ public class ProductDetailsPage implements TakesFinalScreenshot {
      */
     @Step("Check if the page title is correct")
     public boolean checkTitle() {
-        // Get the title of the page
-        String title = getTitle();
-        // Check if the title matches the expected product details page title
-        return title.equals(PRODUCT_DETAILS_PAGE_TITLE);
+        // Check if the page title identifiable by the class .app_log matches the expected product details page value
+        String appLogo = page.locator(".app_logo").textContent();
+        if (appLogo == null || appLogo.isEmpty()) {
+            System.err.println("App logo is not found on the page.");
+            return false;
+        }
+
+        boolean isTitleCorrect = appLogo.equals(PRODUCT_DETAILS_PAGE_TITLE);
+        if (isTitleCorrect) {
+            System.out.println("Product details page title is correct: " + appLogo);
+        } else {
+            System.out.println("Product details page title is incorrect: " + appLogo);
+            ScreenshotManager.takeScreenshot(page, "product-details-title-" + appLogo);
+        }
+        return isTitleCorrect;
     }
 
     /**
@@ -118,21 +128,17 @@ public class ProductDetailsPage implements TakesFinalScreenshot {
     }
 
     /**
-     * Get the URL of the product details page.
+     * Get the title of the product details page.
      *
-     * @return The URL of the product details page.
+     * @return The title of the product details page.
      */
     @Step("Get the title of the product details page")
     public String getTitle() {
         // Get the title text from the page element
-        String title = page.getByTestId("title").textContent();
-        boolean isTitleCorrect = title.equals(PRODUCT_DETAILS_PAGE_TITLE);
-        if (isTitleCorrect) {
-            System.out.println("Product details page title is correct: " + title);
-            ScreenshotManager.takeScreenshot(page, "product-details-title-" + title);
-        } else {
-            System.out.println("Product details page title is incorrect: " + title);
-            ScreenshotManager.takeScreenshot(page, "product-details-title-" + title);
+        String title = page.locator(".app_logo").textContent();
+        if (title == null || title.isEmpty()) {
+            System.err.println("App logo is not found on the page.");
+            return "";
         }
         return title;
     }

@@ -16,6 +16,7 @@ Feature: Product Catalog
         | product_name        | description                                                                                                                            | price  |
         | Sauce Labs Backpack | carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection. | $29.99 |
       And the product image for "Sauce Labs Backpack" should be displayed
+      Then Sally goes back to the inventory page
 
   Rule: Customers should be able to cancel the checkout process from multiple phases of the check out process.
 

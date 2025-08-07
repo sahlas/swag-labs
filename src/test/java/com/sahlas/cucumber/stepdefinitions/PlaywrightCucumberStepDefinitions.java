@@ -1,9 +1,12 @@
 package com.sahlas.cucumber.stepdefinitions;
 
 import com.sahlas.domain.User;
+import com.sahlas.fixtures.SharedContext;
 import com.sahlas.swaglabs.catalog.pageobjects.*;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -20,6 +23,30 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
  * This class contains the implementation of Gherkin steps for testing the Swag Labs application.
  */
 public class PlaywrightCucumberStepDefinitions {
+    /**
+     * Shared context for managing state across step definitions.
+     * This context is used to share data such as page objects and screenshot taker.
+     */
+    private final SharedContext sharedContext;
+
+    /**
+     * Constructor that initializes the shared context.
+     * This constructor is used when a specific shared context is provided.
+     *
+     * @param sharedContext The shared context to be used in the step definitions.
+     */
+    public PlaywrightCucumberStepDefinitions(SharedContext sharedContext) {
+        this.sharedContext = sharedContext;
+    }
+
+    /**
+     * Default constructor initializes the shared context with a default instance.
+     * This constructor is used when no specific shared context is provided.
+     */
+    public PlaywrightCucumberStepDefinitions() {
+        this.sharedContext = new SharedContext(); // Initialize with a default instance
+
+    }
     // Load environment variables using dotenv
     static final Dotenv dotenv = Dotenv.configure()
             .ignoreIfMissing()
@@ -48,6 +75,10 @@ public class PlaywrightCucumberStepDefinitions {
         shoppingCartPage = new ShoppingCartPage(PlaywrightCucumberFixtures.getPage());
         checkoutCompletePage = new CheckoutCompletePage(PlaywrightCucumberFixtures.getPage());
     }
+    @After
+    public void tearDown(Scenario scenario) {
+       boolean results =  sharedContext.getScreenshotTaker().takeScreenshot(scenario);
+    }
 
     /**
      * Navigates to the login page and verifies the URL.
@@ -55,7 +86,7 @@ public class PlaywrightCucumberStepDefinitions {
     @Given("Sally is on the login page")
     public void sallyIsOnTheLoginPage() {
         loginPage.openHomePage();
-        assertThat(loginPage.gtetUrl())
+        assertThat(loginPage.checkPageUrl())
                 .as("Login page URL should be correct")
                 .isTrue();
     }
@@ -132,10 +163,10 @@ public class PlaywrightCucumberStepDefinitions {
      */
     @When("Sally is redirected to the login page")
     public void redirectToTheLoginPage() {
-        PlaywrightCucumberFixtures.getPage().waitForLoadState();
-        assertThat(PlaywrightCucumberFixtures.getPage().url())
-                .as("Login page is loaded with an error message")
-                .isEqualTo("https://www.saucedemo.com/");
+        loginPage.openHomePage();
+        assertThat(loginPage.checkPageUrl())
+                .as("Login page URL should be correct")
+                .isTrue();
     }
 
     /**
@@ -558,6 +589,9 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(productDetailsPage.checkPageUrl())
                 .as("Product details page URL should be correct")
                 .isTrue();
+        assertThat(productDetailsPage.checkTitle())
+                .as("Product details page title should be " + productDetailsPage.getTitle())
+                .isTrue();
     }
 
     /**
@@ -586,9 +620,6 @@ public class PlaywrightCucumberStepDefinitions {
             assertThat(productDetailsPage.getProductDescription())
                     .as("Product description should match expected value")
                     .isEqualTo(productDescription);
-            System.out.println("Product name: " + productDetailsPage.getProductName());
-            System.out.println("Product description: " + productDetailsPage.getProductDescription());
-            System.out.println("Product price: " + productDetailsPage.getProductPrice());
         }
     }
 
@@ -618,7 +649,6 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(productDetailsPage.getProductPrice())
                 .as("Product price should match expected value")
                 .isEqualTo(price);
-        System.out.println("Product price: " + productDetailsPage.getProductPrice());
     }
 
     /**
@@ -649,5 +679,19 @@ public class PlaywrightCucumberStepDefinitions {
         assertThat(productListPage.checkTitle())
                 .as("Product list title should be 'Products'")
                 .isTrue();
+    }
+
+    @Then("Sally goes back to the inventory page")
+    public void sallyGoesBackToTheInventoryPage() {
+        // By clicking the Back to Products button on the cart page
+        shoppingCartPage.backToProducts();
+        // Verify that the product list page is displayed
+        assertThat(productListPage.checkPageUrl())
+                .as("Product list page URL should be correct")
+                .isTrue();
+        assertThat(productListPage.checkTitle())
+                .as("Product list title should be 'Products'")
+                .isTrue();
+        System.out.println("Sally is back on the inventory page.");
     }
 }
