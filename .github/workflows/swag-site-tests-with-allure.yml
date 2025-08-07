@@ -8,6 +8,20 @@ on:
     branches:
       - '**'
   workflow_dispatch:
+    # This allows the workflow to be manually triggered from the GitHub Actions UI
+    inputs:
+      group:
+        description: 'Group of tests to run'
+        required: false
+        default: 'all'
+      run_tests:
+        description: 'Run tests?'
+        required: false
+        default: 'true'
+      dump_contexts_to_log:
+        description: 'Dump contexts to log?'
+        required: false
+        default: 'false'
   # Allows manual triggering of the workflow
 
 jobs:

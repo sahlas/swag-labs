@@ -61,6 +61,7 @@ This project includes a GitHub Actions workflow for automated testing and report
 - **Executes all tests** using `mvn clean verify`.
 - **Generates Allure test reports** for enhanced test result visualization.
 - **Publishes Allure reports** to the `gh-pages` branch for easy access.
+  - **Find reports at**: [https://sahlas.github.io/swag-labs/allure-report/](https://sahlas.github.io/swag-labs/)
 - **Archives trace files** from test runs for debugging.
 
 ### Manual Trigger
