@@ -13,7 +13,9 @@ on:
 jobs:
   playwright-java-cucumber-tests:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        group: [ group1, group2, group3 ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,8 +43,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Run Maven tests and generate Allure results
-        run: mvn clean verify
+      - name: Run tests for ${{ matrix.group }}
+        run: mvn clean verify -DtestGroup=${{ matrix.group }}
 
       # Step 8: Archive any trace files
       - name: Archive trace files
@@ -75,6 +77,9 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
+          force_orphan: true
+          commit_message: 'Update Allure Report for ${{ matrix.group }}'
+
 
   dump-contexts-to-log:
     runs-on: ubuntu-latest
