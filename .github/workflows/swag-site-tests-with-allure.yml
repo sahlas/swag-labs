@@ -87,10 +87,10 @@ jobs:
       - name: Install Allure Report CLI
         if: always()
         run: |
-          ALLURE_VERSION="2.29.0" # Replace with the desired Allure version
+          ALLURE_VERSION="2.34.1" # Replace with the desired Allure version
           wget https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz
-          tar xf allure-${ALLURE_VERSION}.tgz -C /usr/local/
-          echo "/usr/local/allure-${ALLURE_VERSION}/bin" >> $GITHUB_PATH
+          tar xf allure-${ALLURE_VERSION}.tgz -C /home/runner/work/swag-labs-java-playwright-cucumber
+          echo "/home/runner/work/swag-labs-java-playwright-cucumber/allure-${ALLURE_VERSION}/bin" >> $GITHUB_PATH
 
       - name: Generate Allure Report
         if: always()
