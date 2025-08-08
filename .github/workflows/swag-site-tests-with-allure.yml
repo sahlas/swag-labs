@@ -39,10 +39,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        with:
-          name: Install Node.js dependencies
-          working-directory: ./www
-          path: ./www
+        working-directory: ./www
+
 
       - name: Build React app
         run: npm run build
