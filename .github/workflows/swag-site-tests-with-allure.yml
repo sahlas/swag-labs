@@ -32,6 +32,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # or your preferred Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./www/build # or the output directory of your build
+          # Optional: Specify a custom branch for deployment, e.g., gh-pages
+          publish_branch: gh-pages
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -88,9 +110,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: ./www/build/allure-history
           force_orphan: true
-          commit_message: 'Update Allure Report for ${{ matrix.group }}'
+          commit_message: 'Update Allure Report'
 
 
   dump-contexts-to-log:
