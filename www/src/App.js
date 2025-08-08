@@ -7,7 +7,6 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-         // add a link to the allure report
          <a href="/allure-docker-service" target="_blank" rel="noopener noreferrer">Allure Report</a>
         </p>
         <a
