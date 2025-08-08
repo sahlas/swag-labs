@@ -66,13 +66,13 @@ jobs:
           name: traces
           path: target/traces/*.zip
 
-      - name: Load test report history
-        uses: actions/checkout@v3
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
+#      - name: Load test report history
+#        uses: actions/checkout@v3
+#        if: always()
+#        continue-on-error: true
+#        with:
+#          ref: gh-pages
+#          path: gh-pages
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
@@ -81,6 +81,12 @@ jobs:
           gh_pages: gh-pages
           allure_history: allure-history
           allure_results: target/allure-results
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          allure generate target/allure-results --clean -o target/allure-report
+          allure open target/allure-report
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -101,17 +107,17 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: build # or the output directory of your build
+          publish_dir: target/build # or the output directory of your build
 
-      - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
-          force_orphan: true
-          commit_message: 'Update Allure Report'
+#      - name: Publish test report
+#        uses: peaceiris/actions-gh-pages@v3
+#        if: always()
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_branch: gh-pages
+#          publish_dir: allure-history
+#          force_orphan: true
+#          commit_message: 'Update Allure Report'
 
 
   dump-contexts-to-log:
