@@ -82,26 +82,26 @@ jobs:
           allure_history: allure-history
           allure_results: target/allure-results
 
-#      - name: Set up Node.js
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '18' # or your preferred Node.js version
-#
-#      - name: Install dependencies
-#        run: npm install
-#        working-directory: ./www
-#
-#      - name: Build React app
-#        run: npm run build
-#        working-directory: ./www
-#
-#      - name: Deploy to GitHub Pages
-#        uses: peaceiris/actions-gh-pages@v3
-#        if: always()
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_branch: gh-pages
-#          publish_dir: build # or the output directory of your build
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # or your preferred Node.js version
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./www
+
+      - name: Build React app
+        run: npm run build
+        working-directory: ./www
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: build # or the output directory of your build
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
