@@ -103,7 +103,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build # or the output directory of your build
+          publish_dir: build # or the output directory of your build
           # Optional: Specify a custom branch for deployment, e.g., gh-pages
           publish_branch: gh-pages
 
@@ -113,7 +113,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./build/allure-history
+          publish_dir: build/allure-history
           force_orphan: true
           commit_message: 'Update Allure Report'
 
