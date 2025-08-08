@@ -1,0 +1,101 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Fri Aug 08 19:32:52 GMT 2025","Fri Aug 08 19:32:57 GMT 2025","5367","","Product Catalog","","Sally modifies her cart and proceeds to checkout then completes the order","","Sally modifies her cart and proceeds to checkout then completes the order","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:32 GMT 2025","Fri Aug 08 19:32:52 GMT 2025","20325","","Product Catalog","","Sally cancels the checkout process from the checkout step 1 page","","Sally cancels the checkout process from the checkout step 1 page","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:33:01 GMT 2025","Fri Aug 08 19:33:03 GMT 2025","1538","","Product Catalog","","Sally removes products from her cart","","Sally removes products from her cart","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:54 GMT 2025","Fri Aug 08 19:32:56 GMT 2025","1275","","Product Catalog","","Sally tries to log in with invalid credentials","","Sally tries to log in with invalid credentials","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:53 GMT 2025","Fri Aug 08 19:32:55 GMT 2025","2458","","Product Catalog","","Sally adds multiple products to the shopping cart","","Sally adds multiple products to the shopping cart","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:57 GMT 2025","Fri Aug 08 19:33:01 GMT 2025","3964","","Product Catalog","","Sally views her cart","","Sally views her cart","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:58 GMT 2025","Fri Aug 08 19:33:00 GMT 2025","2093","","Product Catalog","","Sally sorts by different criteria after searching for a product","","Sally sorts by different criteria after searching for a product","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:32 GMT 2025","Fri Aug 08 19:32:53 GMT 2025","21079","","Product Catalog","","Sally cancels the checkout process from the checkout step 2 page","","Sally cancels the checkout process from the checkout step 2 page","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:56 GMT 2025","Fri Aug 08 19:32:58 GMT 2025","2436","","Product Catalog","","Sally sorts by different criteria after searching for a product","","Sally sorts by different criteria after searching for a product","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:33:00 GMT 2025","Fri Aug 08 19:33:02 GMT 2025","2034","","Product Catalog","","Sally sorts by different criteria after searching for a product","","Sally sorts by different criteria after searching for a product","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:57 GMT 2025","Fri Aug 08 19:33:02 GMT 2025","4801","","Product Catalog","","Sally modifies her cart by removing all products","","Sally modifies her cart by removing all products","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:33:00 GMT 2025","Fri Aug 08 19:33:02 GMT 2025","2129","","Product Catalog","","Sally sorts by different criteria after searching for a product","","Sally sorts by different criteria after searching for a product","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:57 GMT 2025","Fri Aug 08 19:33:00 GMT 2025","3132","","Product Catalog","","Sally continues shopping after adding products to her cart","","Sally continues shopping after adding products to her cart","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:32 GMT 2025","Fri Aug 08 19:32:50 GMT 2025","18351","","Product Catalog","","Sally tries to access the inventory page without logging in","","Sally tries to access the inventory page without logging in","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:55 GMT 2025","Fri Aug 08 19:32:57 GMT 2025","2184","","Product Catalog","","Sally adds a product to her cart","","Sally adds a product to her cart","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:50 GMT 2025","Fri Aug 08 19:32:52 GMT 2025","1446","","Product Catalog","","Sally tries to log in with invalid credentials","","Sally tries to log in with invalid credentials","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:53 GMT 2025","Fri Aug 08 19:32:54 GMT 2025","1237","","Product Catalog","","Sally tries to log in with invalid credentials","","Sally tries to log in with invalid credentials","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:52 GMT 2025","Fri Aug 08 19:32:57 GMT 2025","4580","","Product Catalog","","Sally proceeds to checkout with items in her cart and completes the order","","Sally proceeds to checkout with items in her cart and completes the order","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:52 GMT 2025","Fri Aug 08 19:32:53 GMT 2025","1328","","Product Catalog","","Sally tries to log in with invalid credentials","","Sally tries to log in with invalid credentials","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
+"passed","Fri Aug 08 19:32:32 GMT 2025","Fri Aug 08 19:32:52 GMT 2025","20041","","Product Catalog","","Sally views product details for a specific product","","Sally views product details for a specific product","  As a customer,
+  I want to easily search, filter and sort products in the catalog
+  So that I can find the products I am interested in quickly and efficiently.
+
+  Sally is an online shopper who wants to choose products to purchase in the catalog."
