@@ -7,8 +7,8 @@ on:
   pull_request:
     branches:
       - '**'
+  # This allows the workflow to be manually triggered from the GitHub Actions UI
   workflow_dispatch:
-    # This allows the workflow to be manually triggered from the GitHub Actions UI
     inputs:
       group:
         description: 'Group of tests to run'
@@ -22,7 +22,6 @@ on:
         description: 'Dump contexts to log?'
         required: false
         default: 'false'
-  # Allows manual triggering of the workflow
 
 jobs:
   playwright-java-cucumber-tests:
@@ -60,7 +59,6 @@ jobs:
       - name: Run tests
         run: mvn clean verify
 
-      # Step 8: Archive any trace files
       - name: Archive trace files
         if: always()  # Ensure this runs even if previous steps fail
         uses: actions/upload-artifact@v4
@@ -68,13 +66,13 @@ jobs:
           name: traces
           path: target/traces/*.zip
 
-#      - name: Load test report history
-#        uses: actions/checkout@v3
-#        if: always()
-#        continue-on-error: true
-#        with:
-#          ref: gh-pages
-#          path: gh-pages
+      - name: Load test report history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
 
       - name: Build test report
         uses: simple-elf/allure-report-action@v1.7
@@ -97,26 +95,26 @@ jobs:
 #        run: |
 #          allure generate target/allure-results --clean -o target/allure-report
 #
-#      - name: Set up Node.js
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: '18' # or your preferred Node.js version
-#
-#      - name: Install dependencies
-#        run: npm install
-#        working-directory: ./www
-#
-#      - name: Build React app
-#        run: npm run build
-#        working-directory: ./www
-#
-#      - name: Publish React app to GitHub Pages
-#        uses: peaceiris/actions-gh-pages@v3
-#        if: always()
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_branch: gh-pages
-#          publish_dir: target/build # or the output directory of your build
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # or your preferred Node.js version
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./www
+
+      - name: Build React app
+        run: npm run build
+        working-directory: ./www
+
+      - name: Publish React app to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages-react
+          publish_dir: target/build # or the output directory of your build
 
       - name: Publish test report
         uses: peaceiris/actions-gh-pages@v3
@@ -127,7 +125,6 @@ jobs:
           publish_dir: allure-history
           force_orphan: true
           commit_message: 'Update Allure Report'
-
 
   dump-contexts-to-log:
     runs-on: ubuntu-latest

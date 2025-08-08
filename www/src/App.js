@@ -9,13 +9,6 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-            <div style={{ width: '100%', height: '800px' }}>
-              <iframe
-                src="https://sahlas.github.io/swag-labs-java-playwright-cucumber/allure-report/index.html"
-                title="Allure Report"
-                style={{ width: '100%', height: '100%', border: 'none' }}
-              />
-            </div>
         <a
           className="App-link"
           href="https://reactjs.org"
