@@ -46,10 +46,7 @@ jobs:
 
       - name: Build React app
         run: npm run build
-        with:
-          name: Install Node.js dependencies
-          working-directory: ./www
-          path: ./www
+        working-directory: ./www
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
