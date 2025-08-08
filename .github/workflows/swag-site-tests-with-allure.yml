@@ -96,7 +96,6 @@ jobs:
         if: always()
         run: |
           allure generate target/allure-results --clean -o target/allure-report
-          allure open target/allure-report
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
