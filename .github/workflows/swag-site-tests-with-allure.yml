@@ -1,146 +1,155 @@
-name: Run Tests and Generate Allure Report
+# This GitHub Actions workflow is designed to run tests, generate an Allure report,
+        # and publish both the test report and a React app to GitHub Pages.
 
-on:
+        name: Run Tests and Generate Allure Report
 
-  push:
-    branches: [ main ]
-  pull_request:
-    branches:
-      - '**'
-  # This allows the workflow to be manually triggered from the GitHub Actions UI
-  workflow_dispatch:
-    inputs:
-      group:
-        description: 'Group of tests to run'
-        required: false
-        default: 'all'
-      run_tests:
-        description: 'Run tests?'
-        required: false
-        default: 'true'
-      dump_contexts_to_log:
-        description: 'Dump contexts to log?'
-        required: false
-        default: 'false'
+        on:
+          # Trigger the workflow on pushes to the main branch, pull requests, or manual dispatch.
+          push:
+            branches: [ main ]
+          pull_request:
+            branches:
+              - '**'
+          workflow_dispatch: # Allows manual triggering with optional inputs.
+            inputs:
+              group:
+                description: 'Group of tests to run'
+                required: false
+                default: 'all'
+              run_tests:
+                description: 'Run tests?'
+                required: false
+                default: 'true'
+              dump_contexts_to_log:
+                description: 'Dump contexts to log?'
+                required: false
+                default: 'false'
 
-jobs:
-  playwright-java-cucumber-tests:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+        jobs:
+          # Job to run Playwright Java Cucumber tests and generate an Allure report.
+          playwright-java-cucumber-tests:
+            runs-on: ubuntu-latest # Use the latest Ubuntu runner.
+            permissions:
+              contents: write # Grant write permissions to the repository contents.
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+            steps:
+              # Step 1: Check out the repository code.
+              - name: Checkout repository
+                uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+              # Step 2: Set up JDK 17 for the Java-based tests.
+              - name: Set up JDK 17
+                uses: actions/setup-java@v4
+                with:
+                  distribution: 'temurin'
+                  java-version: '17'
 
-      - name: Setup Maven Action
-        uses: s4u/setup-maven-action@v1.7.0
-        with:
-          checkout-fetch-depth: 0
-          java-version: 17
-          java-distribution: temurin
-          maven-version: 3.9.9
+              # Step 3: Set up Maven for dependency management and builds.
+              - name: Setup Maven Action
+                uses: s4u/setup-maven-action@v1.7.0
+                with:
+                  checkout-fetch-depth: 0
+                  java-version: 17
+                  java-distribution: temurin
+                  maven-version: 3.9.9
 
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+              # Step 4: Cache Maven dependencies to speed up builds.
+              - name: Cache Maven packages
+                uses: actions/cache@v4
+                with:
+                  path: |
+                    ~/.m2/repository
+                  key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+                  restore-keys: |
+                    ${{ runner.os }}-maven-
 
-      - name: Run tests
-        run: mvn clean verify
+              # Step 5: Run the tests using Maven.
+              - name: Run tests
+                run: mvn clean verify
 
-      - name: Archive trace files
-        if: always()  # Ensure this runs even if previous steps fail
-        uses: actions/upload-artifact@v4
-        with:
-          name: traces
-          path: target/traces/*.zip
+              # Step 6: Archive trace files for debugging purposes.
+              - name: Archive trace files
+                if: always() # Ensure this step runs even if previous steps fail.
+                uses: actions/upload-artifact@v4
+                with:
+                  name: traces
+                  path: target/traces/*.zip
 
-      - name: Load test report history
-        uses: actions/checkout@v3
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
+              # Step 7: Load test report history from the gh-pages branch.
+              - name: Load test report history
+                uses: actions/checkout@v3
+                if: always()
+                continue-on-error: true
+                with:
+                  ref: gh-pages
+                  path: gh-pages
 
-      - name: Build test report
-        uses: simple-elf/allure-report-action@v1.7
-        if: always()
-        with:
-          gh_pages: gh-pages
-          allure_history: allure-history
-          allure_results: target/allure-results
+              # Step 8: Build the Allure test report.
+              - name: Build test report
+                uses: simple-elf/allure-report-action@v1.7
+                if: always()
+                with:
+                  gh_pages: gh-pages
+                  allure_history: allure-history
+                  allure_results: target/allure-results
 
-#      - name: Install Allure Report CLI
-#        if: always()
-#        run: |
-#          ALLURE_VERSION="2.34.1" # Replace with the desired Allure version
-#          wget https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz
-#          tar xf allure-${ALLURE_VERSION}.tgz -C /home/runner/work/swag-labs-java-playwright-cucumber
-#          echo "/home/runner/work/swag-labs-java-playwright-cucumber/allure-${ALLURE_VERSION}/bin" >> $GITHUB_PATH
-#
-#      - name: Generate Allure Report
-#        if: always()
-#        run: |
-#          allure generate target/allure-results --clean -o target/allure-report
-#
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18' # or your preferred Node.js version
+              # Step 9: Set up Node.js for building the React app.
+              - name: Set up Node.js
+                uses: actions/setup-node@v4
+                with:
+                  node-version: '18' # Specify the Node.js version.
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./www
+              # Step 10: Install dependencies for the React app.
+              - name: Install dependencies
+                run: npm install
+                working-directory: ./www
 
-      - name: Build React app
-        run: npm run build
-        working-directory: ./www
+              # Step 11: Build the React app.
+              - name: Build React app
+                run: npm run build
+                working-directory: ./www
 
-      - name: Publish React app to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages-react
-          publish_dir: target/build # or the output directory of your build
+              # Step 12: Publish the React app to GitHub Pages.
+              - name: Publish React app to GitHub Pages
+                uses: peaceiris/actions-gh-pages@v3
+                if: always()
+                with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_branch: gh-pages-react
+                  publish_dir: target/build # Specify the build output directory.
 
-      - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
-          force_orphan: true
-          commit_message: 'Update Allure Report'
+              # Step 13: Publish the Allure test report to GitHub Pages.
+              - name: Publish test report
+                uses: peaceiris/actions-gh-pages@v3
+                if: always()
+                with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_branch: gh-pages
+                  publish_dir: allure-history
+                  force_orphan: true
+                  commit_message: 'Update Allure Report'
 
-  dump-contexts-to-log:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        id: github_context_step
-        run: echo '${{ toJSON(github) }}'
-      - name: Dump job context
-        run: echo '${{ toJSON(job) }}'
-      - name: Dump steps context
-        run: echo '${{ toJSON(steps) }}'
-      - name: Dump runner context
-        run: echo '${{ toJSON(runner) }}'
-      # - name: Dump strategy context
-      #   run: echo '${{ toJSON(strategy) }}'
-      # - name: Dump matrix context
-      #   run: echo '${{ toJSON(matrix) }}'
-      - name: Dump vars
-        run: echo '${{ toJSON(vars) }}'
+          # Job to dump various GitHub Actions contexts to the log for debugging.
+          dump-contexts-to-log:
+            runs-on: ubuntu-latest # Use the latest Ubuntu runner.
+            steps:
+              # Step 1: Dump the GitHub context.
+              - name: Dump GitHub context
+                id: github_context_step
+                run: echo '${{ toJSON(github) }}'
+
+              # Step 2: Dump the job context.
+              - name: Dump job context
+                run: echo '${{ toJSON(job) }}'
+
+              # Step 3: Dump the steps context.
+              - name: Dump steps context
+                run: echo '${{ toJSON(steps) }}'
+
+              # Step 4: Dump the runner context.
+              - name: Dump runner context
+                run: echo '${{ toJSON(runner) }}'
+
+              # Step 5: Dump the vars context.
+              - name: Dump vars
+                run: echo '${{ toJSON(vars) }}'
